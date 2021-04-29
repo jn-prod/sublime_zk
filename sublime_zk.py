@@ -807,8 +807,8 @@ class ExternalSearch:
                     column = 1
                 results.sort(key=itemgetter(column))
                 for note_id, title in results:
-                    f.write(u'* {}{}{} {}\n'.format(link_prefix, note_id,
-                                                    link_postfix, title))
+                    f.write(u'* {}{}{}\n'.format(link_prefix, title,
+                                                    link_postfix))
 
     @staticmethod
     def external_file(folder):
@@ -992,7 +992,7 @@ class TextProduction:
                 column = 1
             results.sort(key=itemgetter(column))
             for note_id, title in results:
-                bullet_line = '* {}{}{} {}'.format(pre, note_id, post, title)
+                bullet_line = '* {}{}{}'.format(pre, title, post)
                 bullet_list.append(bullet_line)
             view.insert(edit, line_region.b, '\n' + '\n'.join(bullet_list))
 
@@ -1009,7 +1009,8 @@ def cut_after_note_id(text):
     """
     Tries to find the 12/14 digit note ID (at beginning) in text.
     """
-    note_ids = re.findall('[0-9.]{12,18}', text)
+    note_ids = re.split('\.', text)
+    # print(note_ids)
     if note_ids:
         return note_ids[0]
 
@@ -1045,7 +1046,7 @@ def note_template_handle_date_spec(template, note_id):
 
 
 def create_note(filn, title, origin_id=None, origin_title=None, body=None):
-    note_id = os.path.basename(filn).split()[0]
+    note_id = timestamp()
     params = {
         'title': title,
         'file': os.path.basename(filn),
@@ -1612,8 +1613,7 @@ class ZkFollowWikiLinkCommand(sublime_plugin.TextCommand):
                 column = 1
             results.sort(key=itemgetter(column))
             for note_id, title in results:
-                line = '* ' + link_prefix + note_id + link_postfix + ' '
-                line += title
+                line = '* ' + link_prefix + title + link_postfix
                 lines.append(line)
             if ExternalSearch.EXTERNALIZE:
                 with open(ExternalSearch.external_file(self.folder), mode='w',
@@ -1638,6 +1638,8 @@ class ZkFollowWikiLinkCommand(sublime_plugin.TextCommand):
         note_id = cut_after_note_id(selected_text)
         the_file = note_file_by_id(note_id, folder, extension)
 
+        # print(note_id)
+
         if the_file:
             new_view = window.open_file(the_file)
             post_open_note(new_view, PANE_FOR_OPENING_NOTES)
@@ -1647,7 +1649,7 @@ class ZkFollowWikiLinkCommand(sublime_plugin.TextCommand):
             # create "201710201631 my new note.md". We will also add a link
             # "[[201710201631]]" into the current document
             new_id = timestamp()
-            the_file = new_id + ' ' + selected_text + extension
+            the_file = selected_text + extension
             the_file = os.path.join(folder, the_file)
 
             replace_str = new_id
@@ -1657,7 +1659,7 @@ class ZkFollowWikiLinkCommand(sublime_plugin.TextCommand):
                 if not settings.get('double_brackets', True):
                     postfix = ']'
                 location.b += len(postfix)   # we have to replace that, too
-                replace_str += postfix + ' ' + selected_text
+                replace_str =  selected_text + postfix
 
             self.view.replace(edit, location, replace_str)
 
@@ -1805,20 +1807,13 @@ class ZkNewZettelCommand(sublime_plugin.WindowCommand):
 
         settings = get_settings()
         extension = settings.get('wiki_extension')
-        id_in_title = settings.get('id_in_title')
 
-        new_id = timestamp()
-        the_file = os.path.join(folder,  new_id + ' ' + input_text + extension)
+        the_file = os.path.join(folder,  input_text + extension)
         new_title = input_text
-        if id_in_title:
-            new_title = new_id + ' ' + input_text
 
         if self.insert_link:
             prefix, postfix = get_link_pre_postfix()
-            link_txt = prefix + new_id + postfix
-            do_insert_title = settings.get('insert_links_with_titles', False)
-            if do_insert_title:
-                link_txt += ' ' + input_text
+            link_txt = prefix + input_text + postfix
             view = self.window.active_view()
             view.run_command('zk_replace_selected_text', {
                              'args': {'text': link_txt}})
@@ -1842,11 +1837,8 @@ class ZkGetWikiLinkCommand(sublime_plugin.TextCommand):
 
         settings = get_settings()
         prefix, postfix = get_link_pre_postfix()
-        note_id, title = self.modified_files[selection].split(' ', 1)
-        link_txt = prefix + note_id + postfix
-        do_insert_title = settings.get('insert_links_with_titles', False)
-        if do_insert_title:
-            link_txt += ' ' + title
+        title = self.modified_files[selection]
+        link_txt = prefix + title + postfix
 
         self.view.run_command(
             'zk_insert_wiki_link', {'args': {'text': link_txt}})
@@ -2059,8 +2051,7 @@ class ZkMultiTagSearchCommand(sublime_plugin.WindowCommand):
             column = 1
         results.sort(key=itemgetter(column))
         for note_id, title in results:
-            line = '* ' + link_prefix + note_id + link_postfix + ' '
-            line += title
+            line = '* ' + link_prefix + title + link_postfix
             lines.append(line)
         if ExternalSearch.EXTERNALIZE:
             with open(ExternalSearch.external_file(self.folder), mode='w',
@@ -2460,7 +2451,7 @@ class NoteLinkHighlighter(sublime_plugin.EventListener):
             symbol = 'bookmark'
         else:
             symbol = ''
-
+        print('underline_regions')
         flags = sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE | sublime.DRAW_SOLID_UNDERLINE
         key = u'clickable-note_links ' + scope_name
         scope = 'markup.zettel.link'
