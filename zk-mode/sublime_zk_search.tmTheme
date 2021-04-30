@@ -1469,10 +1469,8 @@
       <string>markup.zettel.link</string>
       <key>settings</key>
       <dict>
-        <key>fontStyle</key>
-        <string>underline</string>
         <key>foreground</key>
-        <string>#2a3aff</string>
+        <string>#66d9ef</string>
       </dict>
     </dict>
     <dict>
@@ -1482,10 +1480,8 @@
       <string>markup.zettel.linktitle</string>
       <key>settings</key>
       <dict>
-        <key>fontStyle</key>
-        <string>underline</string>
         <key>foreground</key>
-        <string>#7a9aff</string>
+        <string>#66d9ef</string>
       </dict>
     </dict>
     <dict>
@@ -1589,8 +1585,6 @@
       <string>string.other.link.title.markdown</string>
       <key>settings</key>
       <dict>
-        <key>fontStyle</key>
-        <string>underline</string>
         <key>foreground</key>
         <string>#66d9ef</string>
       </dict>

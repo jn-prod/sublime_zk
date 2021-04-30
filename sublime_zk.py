@@ -2451,7 +2451,7 @@ class NoteLinkHighlighter(sublime_plugin.EventListener):
             symbol = 'bookmark'
         else:
             symbol = ''
-        print('underline_regions')
+
         flags = sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE | sublime.DRAW_SOLID_UNDERLINE
         key = u'clickable-note_links ' + scope_name
         scope = 'markup.zettel.link'

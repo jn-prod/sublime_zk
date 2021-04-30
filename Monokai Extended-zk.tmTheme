@@ -1469,6 +1469,8 @@
       <string>markup.zettel.link</string>
       <key>settings</key>
       <dict>
+        <key>fontStyle</key>
+        <string></string>
         <key>foreground</key>
         <string>#7a9aff</string>
       </dict>
@@ -1481,7 +1483,7 @@
       <key>settings</key>
       <dict>
         <key>fontStyle</key>
-        <string>underline</string>
+        <string></string>
         <key>foreground</key>
         <string>#7a9aff</string>
       </dict>
@@ -1558,7 +1560,7 @@
       <key>settings</key>
       <dict>
         <key>fontStyle</key>
-        <string>underline</string>
+        <string></string>
         <key>foreground</key>
         <string>#66d9ef</string>
       </dict>
