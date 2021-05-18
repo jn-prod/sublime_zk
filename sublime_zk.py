@@ -2452,12 +2452,12 @@ class NoteLinkHighlighter(sublime_plugin.EventListener):
         else:
             symbol = ''
 
-        flags = sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE | sublime.DRAW_SOLID_UNDERLINE
+        flags = sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE
         key = u'clickable-note_links ' + scope_name
         scope = 'markup.zettel.link'
 
         if tags == True:
-            flags = sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE | sublime.DRAW_SOLID_UNDERLINE
+            flags = sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE
             key = 'tag ' + scope_name
             scope = 'markup.zettel.tag'
             symbol = ''
